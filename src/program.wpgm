@@ -1,0 +1,8 @@
+import wollok.game.*
+import gobstones.*
+
+program abc {
+
+	tablero.iniciar()
+	game.start()
+}
