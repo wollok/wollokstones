@@ -1,9 +1,13 @@
 import wollok.game.*
 
+
+
+
+
 object tablero {
 	
-	var property cantColumnas = 5
-	var property cantFilas = 5
+	var property cantColumnas = 4
+	var property cantFilas = 4
 	
 	const columnas = []
 	
@@ -33,14 +37,14 @@ object tablero {
 	}
 
 	method configurarTeclas() {
-		keyboard.num(1).onPressDo({cabezal.poner(rojo)})
-		keyboard.num(2).onPressDo({cabezal.poner(verde)})
-		keyboard.num(3).onPressDo({cabezal.poner(azul)})
-		keyboard.num(4).onPressDo({cabezal.poner(negro)})
-		keyboard.num(5).onPressDo({cabezal.sacar(rojo)})
-		keyboard.num(6).onPressDo({cabezal.sacar(verde)})
-		keyboard.num(7).onPressDo({cabezal.sacar(azul)})
-		keyboard.num(8).onPressDo({cabezal.sacar(negro)})
+		keyboard.num(1).onPressDo({rojo.poner()})
+		keyboard.num(2).onPressDo({rojo.sacar()})
+		keyboard.num(3).onPressDo({verde.poner()})
+		keyboard.num(4).onPressDo({verde.sacar()})
+		keyboard.num(5).onPressDo({azul.poner()})
+		keyboard.num(6).onPressDo({azul.sacar()})
+		keyboard.num(7).onPressDo({negro.poner()})
+		keyboard.num(8).onPressDo({negro.sacar()})
 		
 	}
 	
@@ -60,8 +64,8 @@ object tablero {
 object cabezal {
 	
 	
-	var fila = 0
-	var columna = 0
+	var property fila = 0
+	var property columna = 0
 	
 	method image() = "cabezal.png"
 	
@@ -75,13 +79,43 @@ object cabezal {
 		 tablero.celda(columna,fila).sacar(color)
 	}
 	method configurarTeclas() {
-		keyboard.up().onPressDo({fila = (fila + 1).min(tablero.cantFilas()-1)})
-		keyboard.down().onPressDo({fila =(fila - 1).max(0)})
-		keyboard.right().onPressDo({columna = (columna + 1).min(tablero.cantColumnas()-1)})
-		keyboard.left().onPressDo({columna = (columna - 1).max(0)})
+		keyboard.up().onPressDo({self.mover(norte)})
+		keyboard.down().onPressDo({self.mover(sur)})
+		keyboard.right().onPressDo({self.mover(este)})
+		keyboard.left().onPressDo({self.mover(oeste)})
+	}
+	
+	method mover(direccion) {
+		direccion.mover()
+	}
+	method fila(nuevaFila){ 
+		fila = nuevaFila.min(tablero.cantFilas()-1).max(0)
+	}
+	method columna(nuevaColumna){
+		columna = nuevaColumna.min(tablero.cantColumnas()-1).max(0)
 	}
 }
 
+object este {
+	method mover(){
+		cabezal.columna(cabezal.columna()+1)
+	}
+}
+object oeste {
+	method mover(){
+		cabezal.columna(cabezal.columna()-1)
+	}
+}
+object norte {
+	method mover(){
+		cabezal.fila(cabezal.fila()+1)
+	}
+}
+object sur {
+	method mover(){
+		cabezal.fila(cabezal.fila()-1)
+	}
+}
 
 class Celda {
 	
@@ -125,7 +159,7 @@ class Bolitas {
 	var color
 	var property position
 	
-	method image() = color + ".png"
+	method image() = color.nombre() + ".png"
 	method text() = cantidad.toString()
 	
 	method poner() {
@@ -144,7 +178,20 @@ class Bolitas {
 	method cantidad() = cantidad
 }
 
-const verde = "verde"
-const rojo = "rojo"
-const azul = "azul"
-const negro = "negro"
+
+class Color{ 
+	var property nombre
+
+	method poner(){
+		cabezal.poner(self)
+	}
+	method sacar(){
+		cabezal.sacar(self)
+	}
+}
+
+const verde = new Color(nombre = "verde")
+const rojo = new Color(nombre = "rojo")
+const azul = new Color(nombre = "azul")
+const negro = new Color(nombre = "negro")
+

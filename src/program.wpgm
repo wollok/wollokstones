@@ -4,5 +4,10 @@ import gobstones.*
 program abc {
 
 	tablero.iniciar()
+
+		norte.mover()
+		rojo.poner()
+	
 	game.start()
 }
+
